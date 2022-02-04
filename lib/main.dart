@@ -1,8 +1,9 @@
-// ignore_for_file: prefer_const_constructors, unnecessary_null_comparison
+// ignore_for_file: prefer_const_constructors, unnecessary_null_comparison, deprecated_member_use
 
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,6 +36,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   File? _image;
+  ImagePicker? imagePicker;
+
+  @override
+  void initState() {
+    super.initState();
+    imagePicker = ImagePicker();
+  }
+
+  Future<void> chooseImageFromGallery() async {
+    PickedFile? pickedFile =
+        await imagePicker!.getImage(source: ImageSource.gallery);
+    setState(() {
+      _image = File(pickedFile!.path);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +69,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     size: 100,
                   ),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                chooseImageFromGallery();
+              },
               child: Text('Choose or Capture Image'),
             ),
           ],
